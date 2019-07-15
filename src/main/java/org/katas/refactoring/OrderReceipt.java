@@ -26,21 +26,40 @@ public class OrderReceipt {
         double totalSalesTx = 0d;
         double totalAmount = 0d;
         for (LineItem lineItem : order.getLineItems()) {
-            output.append(lineItem.getDescription());
-            output = addSpaceT(output);
-            output.append(lineItem.getPrice());
-            output = addSpaceT(output);
-            output.append(lineItem.getQuantity());
-            output = addSpaceT(output);
-            output.append(lineItem.totalAmount());
-            output = addSpaceN(output);
-
+            output = printDescription(lineItem.getDescription(),output);
+            output = printPrice(lineItem.getPrice(),output);
+            output = printQuantity(lineItem.getQuantity(),output);
+            output = printTotal(lineItem.totalAmount(),output);
             totalSalesTx += calculateSalesTax(lineItem);
             totalAmount += lineItem.totalAmount() + calculateSalesTax(lineItem);
         }
 
         output = printStateTax(output,totalSalesTx);
         output = printTotalAmout(output,totalAmount);
+        return output;
+    }
+
+    private StringBuilder printTotal(double totalAmount, StringBuilder output) {
+        output.append(totalAmount);
+        output = addSpaceN(output);
+        return output;
+    }
+
+    private StringBuilder printQuantity(int quantity, StringBuilder output) {
+        output.append(quantity);
+        output = addSpaceT(output);
+        return output;
+    }
+
+    private StringBuilder printPrice(double price, StringBuilder output) {
+        output.append(price);
+        output = addSpaceT(output);
+        return output;
+    }
+
+    private StringBuilder printDescription(String description,StringBuilder output) {
+        output.append(description);
+        output = addSpaceT(output);
         return output;
     }
 
