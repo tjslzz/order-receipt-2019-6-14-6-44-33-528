@@ -7,6 +7,7 @@ package org.katas.refactoring;
  * total sales tax) and prints it.
  */
 public class OrderReceipt {
+    private static final double Sales_Tax_RATE = .10;
     private Order order;
 
     public OrderReceipt(Order order) {
@@ -16,18 +17,13 @@ public class OrderReceipt {
     public String printReceipt() {
         StringBuilder output = new StringBuilder();
 
-        // print headers
-        output.append("======Printing Orders======\n");
+        output = printHeaders(output);
 
-        // print date, bill no, customer name
-//        output.append("Date - " + order.getDate();
-        output.append(order.getCustomerName());
-        output.append(order.getCustomerAddress());
-//        output.append(order.getCustomerLoyaltyNumber());
+        output = printCustomerInfo(output,order);
 
         // prints lineItems
-        double totSalesTx = 0d;
-        double tot = 0d;
+        double totalSalesTx = 0d;
+        double totalAmount = 0d;
         for (LineItem lineItem : order.getLineItems()) {
             output.append(lineItem.getDescription());
             output.append('\t');
@@ -39,18 +35,30 @@ public class OrderReceipt {
             output.append('\n');
 
             // calculate sales tax @ rate of 10%
-            double salesTax = lineItem.totalAmount() * .10;
-            totSalesTx += salesTax;
+            double salesTax = lineItem.totalAmount() * Sales_Tax_RATE;
+            totalSalesTx += salesTax;
 
             // calculate total amount of lineItem = price * quantity + 10 % sales tax
-            tot += lineItem.totalAmount() + salesTax;
+            totalAmount += lineItem.totalAmount() + salesTax;
         }
 
         // prints the state tax
-        output.append("Sales Tax").append('\t').append(totSalesTx);
+        output.append("Sales Tax").append('\t').append(totalSalesTx);
 
         // print total amount
-        output.append("Total Amount").append('\t').append(tot);
+        output.append("Total Amount").append('\t').append(totalAmount);
         return output.toString();
+    }
+
+
+    private StringBuilder printCustomerInfo(StringBuilder output, Order order) {
+        output.append(order.getCustomerName());
+        output.append(order.getCustomerAddress());
+        return output;
+    }
+
+    public StringBuilder printHeaders(StringBuilder output){
+        output.append("======Printing Orders======\n");
+        return output;
     }
 }
